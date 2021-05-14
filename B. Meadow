@@ -1,0 +1,44 @@
+#include <bits/stdc++.h>
+using namespace std; int l[100010]; int area [1010][1010]; int n,k,w; int dp[1000][1000];
+int rek (int pos, int now){
+	if (pos==n) return 0;
+	if (dp[pos][now]!=-1) return dp[pos][now];
+	int ans=0;
+	if (now!=k) for (int j=pos; j<n; j++) ans=max (ans, rek (j+1, now+1)+area[pos][j]);
+	ans=max (ans, rek(pos+1, now));
+	return dp[pos][now]=ans;
+}
+int main(){
+	cin >> n >> k >> w;
+	for (int i=0; i<n; i++) cin >> l[i];
+	if (w==1){
+		sort (l, l+n); reverse (l, l+n); int area=0;
+		for (int i=0; i<k; i++) area+=l[i];
+		cout << area;
+		return 0;
+	}
+	if (k==1){
+		int area=0;
+		for (int i=1; i<=1000; i++){
+			int last_smal=-1;
+			for (int j=0; j<n; j++){
+				if (l[j]<i){
+					area=max (area, min(j-last_smal-1, w)*i); last_smal=j;
+				}
+			}
+			area=max (area, min(n-last_smal-1, w)*i);
+		}
+		cout << area;
+		return 0;
+	}
+	for (int i=0; i<n; i++){
+		for (int j=i; j<i+w; j++){
+			int mini=1001;
+			for (int k=i; k<=j; k++) mini=min(mini, l[k]);
+			area[i][j]=(j-i+1)*mini;
+		}
+	}
+	memset (dp, -1, sizeof dp);
+	cout << rek (0, 0);
+	return 0;
+}
