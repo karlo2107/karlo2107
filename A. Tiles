@@ -1,0 +1,15 @@
+#include <bits/stdc++.h>
+using namespace std; long long int mod=998244353;
+long long int rek (long long int n){
+	if (n==0) return 1;
+	if (n%2==0){
+		return ((rek (n/2)%mod)*(rek (n/2)%mod)%mod);
+	}
+	else{
+		return (2*(rek (n-1)))%mod;
+	}
+}
+int main(){
+	long long int l,w; cin >> l >> w;
+	cout << (rek (l)*rek (w))%mod;
+}
