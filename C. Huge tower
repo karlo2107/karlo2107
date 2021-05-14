@@ -1,0 +1,17 @@
+#include <bits/stdc++.h>
+using namespace std; long long int dp [1000010]; long long int l [1000010]; long long int cnt [1000010]; long long int mod=1e9+9;
+int main(){
+	long long int n,d; cin >> n >> d;
+	for (int i=0; i<n; i++) cin >> l[i];
+	sort (l, l+n); int point=0;
+	for (int i=0; i<n; i++){
+		int num=point;
+		while (l[num]+d<l[i]) num++;
+		point=num;
+		cnt[i]=i-point+1;
+	}
+	dp[0]=1;
+	for (int i=1; i<n; i++) dp[i]=(dp[i-1]*cnt[i])%mod;
+	cout << dp[n-1];
+	return 0;
+}
