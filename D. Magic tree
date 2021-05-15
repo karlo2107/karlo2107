@@ -1,0 +1,43 @@
+#include <bits/stdc++.h>
+using namespace std; vector < vector < int > > g; long long int w [100010]; int d [100010]; map <int, long long int> dp[100010]; int n,m,maxk;
+std::map <int,long long int>::iterator it;
+void dfs (int i){
+	//najveca mapa - manje na vece trik - dfs
+	map <int, long long int> mapa;
+	for (int j=0; j<g[i].size(); j++){
+		int now=g[i][j]; dfs(now);
+		if ((int)dp[now].size()>(int)mapa.size()) swap (dp[now], mapa);
+		for (it=dp[now].begin(); it!=dp[now].end(); it++) mapa[(it->first)]+=(it->second);
+	}
+	//prijelaz
+	int day=d[i]; long long int val=w[i]; mapa [day]+=val;
+	it=mapa.find (day); 
+	if (it!=mapa.end()) it++;
+	for (it; it!=mapa.end(); ){
+		int day2=(it->first); long long int val2=(it->second);
+		if (val2>val){
+			mapa[day2]-=val;
+			break;
+		}
+		val-=val2;
+		it=mapa.erase (it);
+	}
+	swap (mapa, dp[i]);
+	return ;
+}
+int main(){
+	cin >> n >> m >> maxk; g.resize (100010);
+	for (int i=1; i<n; i++){
+		int a; cin >> a; a--;
+		g[a].push_back(i);
+	}
+	for (int i=0; i<m; i++){
+		long long int v, d1, w1; cin >> v >> d1 >> w1; v--;
+		d[v]=d1; w[v]=w1;
+	}
+	dfs (0);
+	long long int ans=0;
+	for (it=dp[0].begin(); it!=dp[0].end(); it++) ans+=(it->second);
+	cout << ans;
+	return 0;
+}
